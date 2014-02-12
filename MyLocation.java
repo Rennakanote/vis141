@@ -7,9 +7,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
 
 public class MyLocation extends Activity implements LocationListener  {
 	  private TextView latituteField;
@@ -25,7 +28,7 @@ public class MyLocation extends Activity implements LocationListener  {
 	    longitudeField = (TextView) findViewById(R.id.lngTextView);
 	    // Get the location manager
 	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-	    // Define the criteria how to select the locatioin provider -> use
+	    // Define the criteria how to select the location provider -> use
 	    // default
 	    Criteria criteria = new Criteria();
 	    provider = locationManager.getBestProvider(criteria, false);
@@ -35,6 +38,7 @@ public class MyLocation extends Activity implements LocationListener  {
 	    if (location != null) {
 	      System.out.println("Provider " + provider + " has been selected.");
 	      onLocationChanged(location);
+	      	
 	    } else {
 	      latituteField.setText("Location not available");
 	      longitudeField.setText("Location not available");
@@ -56,8 +60,8 @@ public class MyLocation extends Activity implements LocationListener  {
 
 	  @Override
 	  public void onLocationChanged(Location location) {
-	    int lat = (int) (location.getLatitude());
-	    int lng = (int) (location.getLongitude());
+	    float lat = (float) (location.getLatitude());
+	    float lng = (float) (location.getLongitude());
 	    latituteField.setText(String.valueOf(lat));
 	    longitudeField.setText(String.valueOf(lng));
 	  }
