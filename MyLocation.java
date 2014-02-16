@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import android.util.Log;
 import com.rennakanote.VIS141Final.DatabaseHandler;
 
@@ -54,7 +53,6 @@ public class MyLocation extends Activity implements LocationListener  {
 	    } else {
 	      latituteField.setText("Location not available");
 	      longitudeField.setText("Location not available");
-	      // dateField.setText("Timelog not available");
 	    }
 	  }	    
 	  
@@ -64,7 +62,7 @@ public class MyLocation extends Activity implements LocationListener  {
 	    super.onResume();
  
 	    locationManager.requestLocationUpdates(provider, 400, 1, this);
-	    // Log.println(Log.ASSERT, "This is the Location " + LocationManager); 
+	    Log.println(Log.ASSERT, "This is the Location Updater", "update"); 
 	  }
 	  
 	  
@@ -72,17 +70,17 @@ public class MyLocation extends Activity implements LocationListener  {
 	  @Override
 	  protected void onPause() {
 	    super.onPause();
-	    // locationManager.removeUpdates(this);
-	    // Log.println(Log.ASSERT, "onPause() Method called"," "+lng+ lat);
+	    locationManager.removeUpdates(this);
+	    Log.println(Log.ASSERT, "onPause() Method called", "Help");
 	  }
-
+	  
 	  @Override
 	  public void onLocationChanged(Location location) {
 	    lat = (float) (location.getLatitude());
 	    lng = (float) (location.getLongitude());
 	    latituteField.setText(String.valueOf(lat));
 	    longitudeField.setText(String.valueOf(lng));
-	    Log.println(Log.ASSERT, "The location has changed:"+"Latitude: +" +lng +" Longitude: "  + lat, null);
+	    Log.println(Log.ASSERT, "The Location has been changed:"+lat ,"Longitude" + lng);
 	  }
 
 	  @Override
@@ -102,28 +100,4 @@ public class MyLocation extends Activity implements LocationListener  {
 	    Toast.makeText(this, "GPS Disabled  " + provider,
 	        Toast.LENGTH_SHORT).show();
 	  }
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.my_location, menu);
-		return true;
-	}
-	
-	public boolean onOptionsItemMenuSelected(MenuItem item)  {
-		switch(item.getItemId())  {
-			case R.id.menu_settings:
-				Toast.makeText(this,  "Settings",  Toast.LENGTH_SHORT).show();
-				return true;
-			case R.id.action_settings:
-					Toast.makeText(this,  "About",Toast.LENGTH_SHORT).show();
-					return true;
-					default:
-						return super.onOptionsItemSelected(item);
-		}
-	}
-	
-	@Override
-	public void onDestroy()  {
-		Toast.makeText(this,  "Service done", Toast.LENGTH_SHORT).show();
-	}
 }
