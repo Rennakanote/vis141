@@ -1,9 +1,5 @@
 package com.rennakanote.VIS141Final;
 
-import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
-
 public class Cordinates {
 	
 	// private variables
