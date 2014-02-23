@@ -12,21 +12,19 @@
         android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/TextView01"
+            android:id="@+id/latitudeField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
-            android:text="Latitude: "
-            android:textSize="20dip" >
+            android:text="@string/lat_textview" >
         </TextView>
 
         <TextView
             android:id="@+id/latTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="unknown"
-            android:textSize="20dip" >
+            android:text="">
         </TextView>
     </LinearLayout>
     <LinearLayout
@@ -35,21 +33,19 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/TextView03"
+            android:id="@+id/LonitudeField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
-            android:text="Longitute: "
-            android:textSize="20dip" >
+            android:text="@string/lng_textview" >
         </TextView>
 
         <TextView
             android:id="@+id/lngTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="unknown"
-            android:textSize="20dip" >
+            android:text="">
         </TextView>
     </LinearLayout>
     <LinearLayout
@@ -58,46 +54,19 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/TextView05"
+            android:id="@+id/timeField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"            
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
-            android:text="Time"
-            android:textSize="20dip" >
+            android:text="@string/time_textview">
         </TextView>
 
         <TextView
             android:id="@+id/timeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="unknown"
-            android:textSize="20dip" >
+            android:text="">
         </TextView>
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/LinearLayout4"
-        android:layout_width="match_parent"
-        android:layout_height="256dp" >
-
-        <Button
-            android:id="@+id/delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="5dip"
-            android:onClick="onClick"
-            android:text="Delete First" />
-
-        <Button
-            android:id="@+id/add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="5dip"
-            android:onClick="onClick"
-            android:text="Add New" />
-    </LinearLayout>
-
 </LinearLayout> 
