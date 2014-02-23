@@ -1,103 +1,101 @@
-package com.rennakanote.VIS141Final;
+package com.rennakanote.gpsdraw;
 
-
-import android.app.Activity;
-import android.content.Context;
-import android.location.Criteria;
+// import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log;
-import com.rennakanote.VIS141Final.DatabaseHandler;
+import com.rennakanote.gpsdraw.DatabaseHandler;
 
 public class MyLocation extends Activity implements LocationListener  {
-	  
-	  private TextView latituteField;
-	  private TextView longitudeField;
-	  private LocationManager locationManager;
-	  private String provider;
-	  private float lat = 0;
-	  private float lng = 0;	  
-	  
-	  @Override
-	  protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Log.println(Log.ASSERT, "MyLocation", "App Started ~^*~^*~^*~^*~^*~^*~^*~^*~^*~^*~^*~^*");
-		setContentView(R.layout.activity_main);
-		latituteField = (TextView) findViewById(R.id.latTextView);
+
+    private Handler handler;
+	private TextView latitudeField;
+	private TextView longitudeField;
+	private TextView timeField; 
+    private double lat = 0;
+    private double lng = 0;
+    private double time = 0;
+    DatabaseHandler db = new DatabaseHandler(this);
+    StringBuilder sb = new StringBuilder();
+
+	@Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Log.println(Log.ASSERT, "MyLocation.java", "App Started ~^*~^*~");
+
+        // Handler will post to UI thread
+        handler = new Handler(); 
+
+        // Normal stuff
+        latitudeField = (TextView) findViewById(R.id.latTextView);
 	    longitudeField = (TextView) findViewById(R.id.lngTextView);
+	    timeField = (TextView) findViewById(R.id.timeTextView);
+
+	    LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
 	    
-	    // Get the location manager
-	    locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-	    // Define the criteria how to select the location provide
-	    Criteria criteria = new Criteria();
-	    provider = locationManager.getBestProvider(criteria, false);
-	    Location location = locationManager.getLastKnownLocation(provider);
+	    Location loc = lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+		Log.println(Log.ASSERT, "getLastKnownLocation()", loc.getLatitude() + " " + loc.getLongitude());
+		lat = loc.getLatitude();
+		lng = loc.getLongitude();
+		time = loc.getTime();
+		latitudeField.setText(lat + "");
+		longitudeField.setText(lng + "");
+		timeField.setText(time + "");
+	    // THIS IS STANDARD register the listener with the Location Manager to receive location updates
+	    lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0,this);
 	    
-	    // Initialize the location fields
-	    if (location != null) {
-	      Log.println(Log.ASSERT, "MyLocation", "Provider " + provider + " has been selected");
-	      onLocationChanged(location);
-
-		    DatabaseHandler db = new DatabaseHandler(this);
-		    
-		    db.addCordinate(new Cordinates());
-		    Log.println(Log.ASSERT, "MyLocation","Provider"+ "Test print line where stuff writes to db");
-
-	    } else {
-	      latituteField.setText("Location not available");
-	      longitudeField.setText("Location not available");
-	    }
-	  }	    
-	  
-	  // Request updates at startup
-	  @Override
-	  protected void onResume() {
-	    super.onResume();
- 
-	    locationManager.requestLocationUpdates(provider, 400, 1, this);
-	    Log.println(Log.ASSERT, "This is the Location Updater", "update"); 
-	  }
-	  
-	  
-	  // Remove the location listener updates when Activity is paused
-	  @Override
-	  protected void onPause() {
-	    super.onPause();
-	    locationManager.removeUpdates(this);
-	    Log.println(Log.ASSERT, "onPause() Method called", "Help");
-	  }
-	  
-	  @Override
-	  public void onLocationChanged(Location location) {
-	    lat = (float) (location.getLatitude());
-	    lng = (float) (location.getLongitude());
-	    latituteField.setText(String.valueOf(lat));
-	    longitudeField.setText(String.valueOf(lng));
-	    Log.println(Log.ASSERT, "The Location has been changed:"+lat ,"Longitude" + lng);
-	  }
-
-	  @Override
-	  public void onStatusChanged(String provider, int status, Bundle extras) {
-	    // TODO Auto-generated method stub
-	  }
-
-	  @Override
-	  public void onProviderEnabled(String provider) {
-	    Toast.makeText(this, "GPS Enabled " + provider,
-	        Toast.LENGTH_SHORT).show();
-
-	  }
-
-	  @Override
-	  public void onProviderDisabled(String provider) {
-	    Toast.makeText(this, "GPS Disabled  " + provider,
-	        Toast.LENGTH_SHORT).show();
-	  }
+	}
+	
+	public void onLocationChanged(Location loc)  {
+		lat = loc.getLatitude();
+		lng = loc.getLongitude();
+		time = loc.getTime();
+		handler.post(new Runnable()  {
+			public void run()  {
+				latitudeField.setText(lat + "");
+				longitudeField.setText(lng + "");
+				timeField.setText(time + "");
+				Toast.makeText(getApplicationContext(),"Time:"+ time +"\n" + 
+						"Latitude: "+lat+ "\n"+
+						"Longitude: "+lng, Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+	
+	@SuppressLint("ShowToast")
+	public void onProviderDisabled(String provider)  {
+		Toast.makeText(getApplicationContext(), "GPS Disabled" + provider, Toast.LENGTH_SHORT);
+		Log.println(Log.ASSERT, "onProviderDisabled()", "Provider Has Been Disabled.");
+	}
+	
+	@Override
+	public void onProviderEnabled(String provider) {
+		 // you could do things here, such as sense when a user has turned off the gps in setttings		
+	}	
+	
+    
+	public void onStatusChanged(String provider, int status, Bundle extras)  {
+        /*Log.println(Log.ASSERT, "onStatusChanged()", "PROVIDER : " + provider 
+                + " ~ " +"STATUS: " + status 
+                + ". " + "EXTRAS? : " + extras 
+                + ".");
+                */        
+	}
+	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.my_location, menu);
+        return true;        
+    }
 }
